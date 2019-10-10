@@ -1,0 +1,9 @@
+- name: wait-for bootstrap-complete
+  become: yes
+  command: /tmp/openshift-install --dir=/var/www/html wait-for bootstrap-complete --log-level debug
+- name: wait for cluster
+  script: scripts/wait_for_cluster.sh
+  retries: 30
+  delay: 30
+  register: result
+  until: result.rc == 0

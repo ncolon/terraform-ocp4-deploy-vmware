@@ -1,0 +1,12 @@
+- name: create ignition-config
+  become: yes
+  command: /tmp/openshift-install --dir=/var/www/html create ignition-configs
+
+- name: replace api-int with bootstrap (hack)
+  replace:
+    path: "{{ item }}"
+    regexp: "{{ replaced_url }}"
+    replace: "{{ bootstrap_url }}"
+  with_items:
+    - /var/www/html/master.ign
+    - /var/www/html/worker.ign

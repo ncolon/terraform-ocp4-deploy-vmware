@@ -1,0 +1,37 @@
+---
+- name: install rpms
+  yum:
+    name: httpd
+    state: latest
+
+- name: install pip
+  easy_install:
+    name: pip
+    state: latest
+
+- name: open firewall
+  firewalld:
+    port: 80/tcp
+    immediate: yes
+    permanent: yes
+    zone: "{{ item }}"
+    state: enabled
+  with_items:
+    - public
+    - internal
+
+- name: start httpd
+  service:
+    name: httpd
+    state: started
+
+- name: install python setuptools
+  pip:
+    name: setuptools
+    extra_args: -U --user
+
+- name: install python openshift
+  pip:
+    name: openshift==0.9.2
+    extra_args: -U --user
+ 

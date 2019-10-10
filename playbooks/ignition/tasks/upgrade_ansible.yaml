@@ -1,0 +1,6 @@
+---
+- name: upgrade ansible
+  yum:
+    name: ansible
+    state: latest
+    enablerepo: "rhel-7-server-extras-rpms,rhel-7-server-ansible-2-rpms"

@@ -1,0 +1,7 @@
+- name: create install-config.yaml
+  template:
+    src: install-config.yaml.j2
+    dest: /var/www/html/install-config.yaml
+    owner: "root"
+    group: "{{ ansible_ssh_user }}"
+    mode: 0644

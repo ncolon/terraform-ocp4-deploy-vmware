@@ -1,0 +1,17 @@
+- hosts: all
+  tasks:
+  - name: bootstrap cluster
+    include: tasks/bootstrap_cluster.yaml
+  - name: deploy rook+ceph
+    include: tasks/deploy_rook.yaml
+    vars:
+      - rookconfigs:
+        - /tmp/rook/cluster/examples/kubernetes/ceph/common.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/operator-openshift.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/cluster.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/filesystem.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/toolbox.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/csi/cephfs/storageclass.yaml
+        - /tmp/rook/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
+  - name: install cluster
+    include: tasks/install_cluster.yaml

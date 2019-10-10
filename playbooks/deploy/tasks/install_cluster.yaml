@@ -1,0 +1,5 @@
+- name: wait-for install-complete
+  become: yes
+  command: /tmp/openshift-install --dir=/var/www/html wait-for install-complete --log-level debug
+  register: cluster
+- debug: var=cluster.stderr_lines

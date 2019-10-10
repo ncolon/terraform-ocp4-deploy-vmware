@@ -1,0 +1,42 @@
+- name: clone rook repo
+  git:
+    repo: https://github.com/rook/rook.git
+    dest: /tmp/rook
+
+- name: deploy rook+ceph
+  k8s:
+    state: present
+    src: "{{ item }}"
+    kubeconfig: /var/www/html/auth/kubeconfig
+    wait: yes
+    wait_timeout: 1200
+  with_items: "{{ rookconfigs }}"
+  ignore_errors: yes
+
+- name: ROOK - Verify the cluster deploy is complete
+  k8s:
+    kubeconfig: /var/www/html/auth/kubeconfig
+    api_version: ceph.rook.io/v1
+    kind: CephCluster
+    name: rook-ceph
+    namespace: rook-ceph
+  register: cluster_data
+  until: cluster_data.result.get('status', {}).get('state') == "Created"
+  retries: 30
+  delay: 30
+  ignore_errors: yes
+
+- name: create image registry pvc
+  k8s:
+    state: present
+    src: "{{ playbook_dir }}/config/image-registry-pvc.yaml"
+    kubeconfig: /var/www/html/auth/kubeconfig
+    wait: yes
+  ignore_errors: yes
+
+- name: patch cluster
+  script: scripts/patch_cluster.sh
+  retries: 30
+  delay: 30
+  register: result
+  until: result.rc == 0

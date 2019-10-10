@@ -1,0 +1,14 @@
+- hosts: all
+  tasks:
+  - name: set clock on bastion
+    include: tasks/set_clock.yaml
+  - name: install rpms on bastion
+    include: tasks/install_rpms.yaml
+  - name: create install-config.yaml
+    include: tasks/create_install_config.yaml
+  - name: create ignition-config
+    include: tasks/create_ignition_config.yaml
+  - name: switch to local dns server
+    include: tasks/switch_dns.yaml
+  - name: upgrade ansible
+    include: tasks/upgrade_ansible.yaml
